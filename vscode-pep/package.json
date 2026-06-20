@@ -1,0 +1,73 @@
+{
+  "name": "pep-lang",
+  "displayName": "Pep Language Support",
+  "description": "Pep is a spec language for defining application behaviors, actions, and features.",
+  "version": "0.1.0",
+  "publisher": "pep-lang",
+  "icon": "./pep.png",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "pep",
+        "aliases": [
+          "Pep",
+          "pep",
+          "Pep Spec Language"
+        ],
+        "extensions": [
+          ".pep"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pep",
+        "scopeName": "source.pep",
+        "path": "./syntaxes/pep.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "pep",
+        "path": "./snippets/pep.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[pep]": {
+        "editor.tokenColorCustomizations": {
+          "textMateRules": [
+            {
+              "scope": "keyword.declaration.param",
+              "settings": {
+                "foreground": "#C586C0",
+                "fontStyle": "bold"
+              }
+            },
+            {
+              "scope": "keyword.declaration.rule",
+              "settings": {
+                "foreground": "#DCDCAA",
+                "fontStyle": "bold"
+              }
+            },
+            {
+              "scope": "keyword.control.trigger",
+              "settings": {
+                "foreground": "#CE9178",
+                "fontStyle": "bold"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

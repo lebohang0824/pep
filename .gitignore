@@ -1,0 +1,20 @@
+# Compiled binary
+pep
+*.test
+
+# Generated output from test runs
+testdata/*.json
+!testdata/expected.json
+
+# Debug helpers
+debug2/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

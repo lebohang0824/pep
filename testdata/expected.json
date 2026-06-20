@@ -1,0 +1,165 @@
+{
+  "appName": "TodoApp",
+  "meta": {
+    "backend": "laravel:12",
+    "database": "sqlite",
+    "description": "A simple task management application.",
+    "frontend": "vue",
+    "name": "Todo Application",
+    "version": "1.0.0"
+  },
+  "actions": [
+    {
+      "name": "SendCompletionEmail",
+      "meta": {},
+      "params": [
+        {
+          "name": "TodoId",
+          "type": "integer",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "name": "CreateTodo",
+      "meta": {
+        "description": "Creates a new todo item."
+      },
+      "functions": [],
+      "params": [
+        {
+          "name": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Status",
+          "type": "enum",
+          "enum": [
+            "QUEUE",
+            "IN_PROGRESS",
+            "DONE"
+          ],
+          "required": false,
+          "default": "QUEUE"
+        }
+      ],
+      "rules": [
+        {
+          "name": "TitleRequired",
+          "condition": "empty(Title)"
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "UpdateTodo",
+      "meta": {
+        "description": "Updates an existing todo item."
+      },
+      "functions": [],
+      "params": [
+        {
+          "name": "Id",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "Status",
+          "type": "enum",
+          "enum": [
+            "QUEUE",
+            "IN_PROGRESS",
+            "DONE"
+          ],
+          "required": true
+        }
+      ],
+      "rules": [
+        {
+          "name": "IdRequired",
+          "condition": "empty(Id)"
+        },
+        {
+          "name": "TitleRequired",
+          "condition": "empty(Title)"
+        }
+      ],
+      "events": [
+        {
+          "condition": "Status == \"DONE\"",
+          "trigger": "SendCompletionEmail"
+        }
+      ]
+    },
+    {
+      "name": "DeleteTodo",
+      "meta": {
+        "description": "Deletes an existing todo item."
+      },
+      "functions": [],
+      "params": [
+        {
+          "name": "Id",
+          "type": "integer",
+          "required": true
+        }
+      ],
+      "rules": [
+        {
+          "name": "IdRequired",
+          "condition": "empty(Id)"
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "GetTodo",
+      "meta": {
+        "description": "Retrieves a single todo item."
+      },
+      "functions": [],
+      "params": [
+        {
+          "name": "Id",
+          "type": "integer",
+          "required": true
+        }
+      ],
+      "rules": [
+        {
+          "name": "IdRequired",
+          "condition": "empty(Id)"
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "ListTodos",
+      "meta": {
+        "description": "Returns all todo items."
+      },
+      "functions": [],
+      "params": [],
+      "rules": [],
+      "events": []
+    }
+  ]
+}

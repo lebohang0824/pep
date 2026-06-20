@@ -1,0 +1,149 @@
+{
+  "Minimal app": {
+    "prefix": "app",
+    "body": [
+      "app ${1:AppName}",
+      "\tmeta",
+      "\t\t${2:key}: \"${3:value}\"",
+      "\tend",
+      "end"
+    ],
+    "description": "Create an app block with meta"
+  },
+  "Action": {
+    "prefix": "action",
+    "body": [
+      "action ${1:ActionName}",
+      "\tparams",
+      "\t\tparam ${2:ParamName}",
+      "\t\t\ttype: ${3:string}",
+      "\t\t\trequired: ${4:true}",
+      "\t\tend",
+      "\tend",
+      "end"
+    ],
+    "description": "Create an action with a parameter"
+  },
+  "Feature": {
+    "prefix": "feature",
+    "body": [
+      "feature ${1:FeatureName}",
+      "\tmeta",
+      "\t\tdescription: \"${2:Description}\"",
+      "\tend",
+      "",
+      "\tparams",
+      "\t\tparam ${3:ParamName}",
+      "\t\t\ttype: ${4:string}",
+      "\t\t\trequired: ${5:true}",
+      "\t\tend",
+      "\tend",
+      "",
+      "\trules",
+      "\t\trule ${6:RuleName}",
+      "\t\t\tif empty(${7:ParamName})",
+      "\t\t\t\treject",
+      "\t\tend",
+      "\tend",
+      "end"
+    ],
+    "description": "Create a feature with meta, params, and rules"
+  },
+  "Feature with events": {
+    "prefix": "feature-events",
+    "body": [
+      "feature ${1:FeatureName}",
+      "\tmeta",
+      "\t\tdescription: \"${2:Description}\"",
+      "\tend",
+      "",
+      "\tparams",
+      "\t\tparam ${3:ParamName}",
+      "\t\t\ttype: ${4:string}",
+      "\t\t\trequired: ${5:true}",
+      "\t\tend",
+      "\tend",
+      "",
+      "\trules",
+      "\t\trule ${6:RuleName}",
+      "\t\t\tif empty(${7:ParamName})",
+      "\t\t\t\treject",
+      "\t\tend",
+      "\tend",
+      "",
+      "\tevents",
+      "\t\tif ${8:Field} == \"${9:Value}\"",
+      "\t\t\ttrigger ${10:ActionName}",
+      "\t\tend",
+      "\tend",
+      "end"
+    ],
+    "description": "Create a feature with meta, params, rules, and conditional events"
+  },
+  "Param": {
+    "prefix": "param",
+    "body": [
+      "param ${1:ParamName}",
+      "\ttype: ${2:string}",
+      "\trequired: ${3:true}",
+      "end"
+    ],
+    "description": "Create a parameter declaration"
+  },
+  "Rule": {
+    "prefix": "rule",
+    "body": [
+      "rule ${1:RuleName}",
+      "\tif empty(${2:ParamName})",
+      "\t\treject",
+      "end"
+    ],
+    "description": "Create a validation rule"
+  },
+  "Function": {
+    "prefix": "function",
+    "body": [
+      "function ${1:FunctionName}(${2:param})",
+      "\treturn ${3:expression}",
+      "end"
+    ],
+    "description": "Create a reusable validation function"
+  },
+  "Function-based rule": {
+    "prefix": "rule-fn",
+    "body": [
+      "rule ${1:RuleName}",
+      "\tif not ${2:FunctionName}(${3:args})",
+      "\t\treject",
+      "end"
+    ],
+    "description": "Create a rule that calls a validation function"
+  },
+  "Conditional event": {
+    "prefix": "if-trigger",
+    "body": [
+      "if ${1:Field} == \"${2:Value}\"",
+      "\ttrigger ${3:ActionName}",
+      "end"
+    ],
+    "description": "Create a conditional event trigger"
+  },
+  "Unconditional event": {
+    "prefix": "trigger",
+    "body": [
+      "trigger ${1:ActionName}"
+    ],
+    "description": "Create an unconditional event trigger"
+  },
+  "Enum param": {
+    "prefix": "enum-param",
+    "body": [
+      "param ${1:ParamName}",
+      "\ttype: enum{${2:\"VAL1\",\"VAL2\"}}",
+      "\trequired: ${3:true}",
+      "\tdefault: ${4:\"VAL1\"}",
+      "end"
+    ],
+    "description": "Create a parameter with an enum type"
+  }
+}

@@ -172,12 +172,26 @@ func (l *Lexer) makeToken(t TokenType, lit string) Token {
 }
 
 func (l *Lexer) skipWhitespace() {
-	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
-		if l.ch == '\n' {
-			l.line++
-			l.column = 0
+	for {
+		for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+			if l.ch == '\n' {
+				l.line++
+				l.column = 0
+			}
+			l.readChar()
 		}
-		l.readChar()
+		if l.ch == '#' {
+			for l.ch != '\n' && l.ch != 0 {
+				l.readChar()
+			}
+			if l.ch == '\n' {
+				l.line++
+				l.column = 0
+				l.readChar()
+			}
+			continue
+		}
+		break
 	}
 }
 

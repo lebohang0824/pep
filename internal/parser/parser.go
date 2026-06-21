@@ -601,43 +601,86 @@ func (p *Parser) parseEvents() []*ast.Event {
 			left := p.curToken.Literal
 			p.nextToken()
 
-			if !p.expectCurrent(lexer.EQ_EQ) {
+			if p.curTokenIs(lexer.LPAREN) {
+				// Function-call condition: FuncName(arg)
+				p.nextToken()
+
+				funcArg := ""
+				if p.curTokenIs(lexer.IDENT) {
+					funcArg = p.curToken.Literal
+					p.nextToken()
+				}
+
+				if !p.expectCurrent(lexer.RPAREN) {
+					p.advanceToEnd()
+					return events
+				}
+
+				if !p.expectCurrent(lexer.TRIGGER) {
+					p.advanceToEnd()
+					return events
+				}
+
+				if !p.curTokenIs(lexer.IDENT) {
+					p.appendError("expected action name after trigger but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
+					p.advanceToEnd()
+					return events
+				}
+				actionName := p.curToken.Literal
+				p.nextToken()
+
+				if !p.curTokenIs(lexer.END) {
+					p.appendError("expected END after event but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
+					p.advanceToEnd()
+					return events
+				}
+				p.nextToken()
+
+				cond := left + "(" + funcArg + ")"
+				events = append(events, &ast.Event{
+					Condition: cond,
+					Trigger:   actionName,
+				})
+			} else if p.curTokenIs(lexer.EQ_EQ) {
+				p.nextToken()
+
+				if !p.curTokenIs(lexer.STRING) {
+					p.appendError("expected string value in condition but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
+					p.advanceToEnd()
+					return events
+				}
+				right := p.curToken.Literal
+				p.nextToken()
+
+				if !p.expectCurrent(lexer.TRIGGER) {
+					p.advanceToEnd()
+					return events
+				}
+
+				if !p.curTokenIs(lexer.IDENT) {
+					p.appendError("expected action name after trigger but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
+					p.advanceToEnd()
+					return events
+				}
+				actionName := p.curToken.Literal
+				p.nextToken()
+
+				if !p.curTokenIs(lexer.END) {
+					p.appendError("expected END after event but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
+					p.advanceToEnd()
+					return events
+				}
+				p.nextToken()
+
+				events = append(events, &ast.Event{
+					Condition: left + " == \"" + right + "\"",
+					Trigger:   actionName,
+				})
+			} else {
+				p.appendError("expected '(' or '==' in event condition but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
 				p.advanceToEnd()
 				return events
 			}
-
-			if !p.curTokenIs(lexer.STRING) {
-				p.appendError("expected string value in condition but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
-				p.advanceToEnd()
-				return events
-			}
-			right := p.curToken.Literal
-			p.nextToken()
-
-			if !p.expectCurrent(lexer.TRIGGER) {
-				p.advanceToEnd()
-				return events
-			}
-
-			if !p.curTokenIs(lexer.IDENT) {
-				p.appendError("expected action name after trigger but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
-				p.advanceToEnd()
-				return events
-			}
-			actionName := p.curToken.Literal
-			p.nextToken()
-
-			if !p.curTokenIs(lexer.END) {
-				p.appendError("expected END after event but got %s (line=%d,col=%d)", p.curToken.Type, p.curToken.Line, p.curToken.Column)
-				p.advanceToEnd()
-				return events
-			}
-			p.nextToken()
-
-			events = append(events, &ast.Event{
-				Condition: left + " == \"" + right + "\"",
-				Trigger:   actionName,
-			})
 
 		case p.curTokenIs(lexer.TRIGGER):
 			p.nextToken()
